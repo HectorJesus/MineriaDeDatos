@@ -1,16 +1,24 @@
 import pandas as pd
-#Importamos la DB y la imprimimos
+import os
+#Importamos la DB
 powerLift = pd.read_csv("X_train.csv")
 
-print(powerLift)
+#Archivo final
+csvpowerLift = 'powerLiftDataClean.csv'
 
-#Filtramos el genero de la db
-dbm = powerLift["Sex"]
+#Comprobamos tipo de datos de la dataset
+print(powerLift.dtypes)
+#Convertimos la columna ['BestSquatKg'] a flotante
+powerLift['BestSquatKg'] = pd.to_numeric(powerLift['BestSquatKg'], errors='coerce')
 
-print(dbm)
+#Filtramos las columnas con las que trabajaremos
+datosImportantes = powerLift[['BestSquatKg','BestDeadliftKg']]
 
-#Obtenemos el numero de participantes segun el genero
+#Verificamos la existencia del nuevo dataset
+archivoExistencia = 'w' if not os.path.exists(csvpowerLift) else 'a'
+#Guardamos las columnas con las que vamos a trabajar
+datosImportantes.to_csv(csvpowerLift,index=False, mode=archivoExistencia)
 
-dbc = powerLift["Sex"].value_counts()
+#Comprobamos cambio de object a float de los datos finales
+print(datosImportantes.dtypes)
 
-print(dbc)
